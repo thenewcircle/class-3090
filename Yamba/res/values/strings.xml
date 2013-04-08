@@ -4,5 +4,7 @@
     <string name="app_name">Yamba</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
+    <string name="update">Update!</string>
+    <string name="status_hint">What\'s happening??</string>
 
 </resources>
