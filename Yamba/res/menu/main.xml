@@ -7,10 +7,16 @@
         android:title="@string/action_settings"/>
     <item
         android:id="@+id/action_status_update"
+        android:icon="@android:drawable/ic_media_play"
         android:showAsAction="always|withText"
         android:title="@string/status_update"
-        android:icon="@android:drawable/ic_media_play"
         android:titleCondensed="@string/update">
+    </item>
+    <item
+        android:id="@+id/action_refresh"
+        android:icon="@android:drawable/ic_menu_rotate"
+        android:showAsAction="always"
+        android:title="@string/refresh">
     </item>
 
 </menu>

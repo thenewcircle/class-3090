@@ -9,5 +9,6 @@
     <string name="status_text_counter">140</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="status_update">Status Update</string>
+    <string name="refresh">Refresh</string>
 
 </resources>
