@@ -10,5 +10,9 @@
     <string name="title_activity_main">MainActivity</string>
     <string name="status_update">Status Update</string>
     <string name="refresh">Refresh</string>
+    <string name="username">Username</string>
+    <string name="username_summary">What\'s your username?</string>
+    <string name="password">Password</string>
+    <string name="password_summary">What\'s your password?</string>
 
 </resources>

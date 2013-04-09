@@ -29,6 +29,9 @@ public class MainActivity extends Activity {
 		case R.id.action_status_update:
 			startActivity(new Intent(this, StatusActivity.class));
 			return true;
+		case R.id.action_settings:
+			startActivity(new Intent(this, SettingsActivity.class));
+			return true;
 		case R.id.action_refresh:
 			startService(new Intent(this, RefreshService.class));
 			return true;

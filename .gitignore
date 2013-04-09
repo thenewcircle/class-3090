@@ -12,6 +12,10 @@
 bin/
 gen/
 
+# Other peopel's code
+ApiDemos/
+YambaClientLib/
+
 # Local configuration file (sdk path, etc)
 local.properties
 

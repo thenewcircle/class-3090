@@ -28,7 +28,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <service android:name="com.twitter.yamba.RefreshService"></service>
+        <activity
+            android:name="com.twitter.yamba.SettingsActivity"
+            android:label="@string/action_settings" >
+        </activity>
+        <service android:name="com.twitter.yamba.RefreshService" >
+        </service>
     </application>
 
 </manifest>
