@@ -1,6 +1,7 @@
 package com.twitter.yamba;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -31,7 +32,7 @@ public class StatusActivity extends Activity {
 
 		statusText = (EditText) findViewById(R.id.status_text);
 		updateButton = (Button) findViewById(R.id.status_button_update);
-		updateButton.setOnClickListener( new OnClickListener() {
+		updateButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				String status = statusText.getText().toString();
@@ -40,21 +41,25 @@ public class StatusActivity extends Activity {
 			}
 		});
 		textCount = (TextView) findViewById(R.id.text_count);
-		defaultTextColor = textCount.getTextColors().getDefaultColor(); 
-		statusText.addTextChangedListener( new TextWatcher() {
+		defaultTextColor = textCount.getTextColors().getDefaultColor();
+		statusText.addTextChangedListener(new TextWatcher() {
 			@Override
-			public void onTextChanged(CharSequence s, int start, int before, int count) {
+			public void onTextChanged(CharSequence s, int start, int before,
+					int count) {
 			}
+
 			@Override
 			public void beforeTextChanged(CharSequence s, int start, int count,
-					int after) {				
+					int after) {
 			}
-			
+
 			@Override
 			public void afterTextChanged(Editable s) {
-				int count = Integer.parseInt( getString(R.string.status_text_counter) ) - s.length();
-				textCount.setText( Integer.toString(count) );
-				if(count<50) {
+				int count = Integer
+						.parseInt(getString(R.string.status_text_counter))
+						- s.length();
+				textCount.setText(Integer.toString(count));
+				if (count < 50) {
 					textCount.setTextColor(Color.RED);
 				} else {
 					textCount.setTextColor(defaultTextColor);
@@ -64,13 +69,21 @@ public class StatusActivity extends Activity {
 	}
 
 	class PostToTwitterTask extends AsyncTask<String, Void, String> {
+		ProgressDialog dialog;
+
+		// Executed on the UI thread
+		@Override
+		protected void onPreExecute() {
+			dialog = ProgressDialog.show(StatusActivity.this,
+					"Posting to the cloud", "Please wait...");
+		}
 
 		// Executed on a separate thread
 		@Override
 		protected String doInBackground(String... params) {
 			try {
 				YambaClient cloud = new YambaClient("student", "password");
-					cloud.postStatus(params[0]);
+				cloud.postStatus(params[0]);
 				return "Successfully posted!";
 			} catch (YambaClientException e) {
 				Log.e("Yamba", "onClick", e);
@@ -78,10 +91,11 @@ public class StatusActivity extends Activity {
 				return "Failed to post";
 			}
 		}
-		
+
 		// Executed on the UI thread
 		@Override
 		protected void onPostExecute(String result) {
+			dialog.dismiss();
 			Toast.makeText(StatusActivity.this, result, Toast.LENGTH_LONG)
 					.show();
 		}
