@@ -1,13 +1,17 @@
 package com.twitter.yamba;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.marakana.android.yamba.clientlib.YambaClient;
@@ -16,6 +20,8 @@ import com.marakana.android.yamba.clientlib.YambaClientException;
 public class StatusActivity extends Activity implements OnClickListener {
 	private EditText statusText;
 	private Button updateButton;
+	private TextView textCount;
+	private int defaultTextColor;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +31,28 @@ public class StatusActivity extends Activity implements OnClickListener {
 		statusText = (EditText) findViewById(R.id.status_text);
 		updateButton = (Button) findViewById(R.id.status_button_update);
 		updateButton.setOnClickListener(this);
+		textCount = (TextView) findViewById(R.id.text_count);
+		defaultTextColor = textCount.getTextColors().getDefaultColor(); 
+		statusText.addTextChangedListener( new TextWatcher() {
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+			}
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {				
+			}
+			
+			@Override
+			public void afterTextChanged(Editable s) {
+				int count = Integer.parseInt( getString(R.string.status_text_counter) ) - s.length();
+				textCount.setText( Integer.toString(count) );
+				if(count<50) {
+					textCount.setTextColor(Color.RED);
+				} else {
+					textCount.setTextColor(defaultTextColor);
+				}
+			}
+		});
 	}
 
 	@Override

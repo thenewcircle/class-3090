@@ -6,5 +6,6 @@
     <string name="hello_world">Hello world!</string>
     <string name="update">Update!</string>
     <string name="status_hint">What\'s happening??</string>
+    <string name="status_text_counter">140</string>
 
 </resources>
