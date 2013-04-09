@@ -17,11 +17,12 @@ import android.widget.Toast;
 import com.marakana.android.yamba.clientlib.YambaClient;
 import com.marakana.android.yamba.clientlib.YambaClientException;
 
-public class StatusActivity extends Activity implements OnClickListener {
+public class StatusActivity extends Activity {
 	private EditText statusText;
 	private Button updateButton;
 	private TextView textCount;
 	private int defaultTextColor;
+	private PostToTwitterTask postToTwitterTask;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +31,14 @@ public class StatusActivity extends Activity implements OnClickListener {
 
 		statusText = (EditText) findViewById(R.id.status_text);
 		updateButton = (Button) findViewById(R.id.status_button_update);
-		updateButton.setOnClickListener(this);
+		updateButton.setOnClickListener( new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				String status = statusText.getText().toString();
+				postToTwitterTask = new PostToTwitterTask();
+				postToTwitterTask.execute(status);
+			}
+		});
 		textCount = (TextView) findViewById(R.id.text_count);
 		defaultTextColor = textCount.getTextColors().getDefaultColor(); 
 		statusText.addTextChangedListener( new TextWatcher() {
@@ -55,13 +63,7 @@ public class StatusActivity extends Activity implements OnClickListener {
 		});
 	}
 
-	@Override
-	public void onClick(View v) {
-		String status = statusText.getText().toString();
-		postToTwitterTask.execute(status);
-	}
-
-	AsyncTask<String, Void, String> postToTwitterTask = new AsyncTask<String, Void, String>() {
+	class PostToTwitterTask extends AsyncTask<String, Void, String> {
 
 		// Executed on a separate thread
 		@Override
@@ -83,7 +85,6 @@ public class StatusActivity extends Activity implements OnClickListener {
 			Toast.makeText(StatusActivity.this, result, Toast.LENGTH_LONG)
 					.show();
 		}
-
 	};
 
 }
