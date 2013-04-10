@@ -1,7 +1,6 @@
 package com.twitter.yamba;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
@@ -19,10 +18,6 @@ public class YambaUtils {
 
 		// Test if username&password are set
 		if (TextUtils.isEmpty(username) || TextUtils.isEmpty(password)) {
-			String message = "Please set your username&password";
-			context.startActivity(new Intent(context, SettingsActivity.class)
-					.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK).putExtra(
-							"message", message));
 			return null;
 		}
 		return new YambaClient(username, password);

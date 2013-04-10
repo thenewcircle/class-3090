@@ -1,6 +1,7 @@
 package com.twitter.yamba;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -38,6 +39,16 @@ public class StatusFragment extends Fragment {
 		updateButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
+
+				if (cloud == null) {
+					String message = "Please set your username&password";
+					startActivity(new Intent(getActivity(), SettingsActivity.class)
+							.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK).putExtra(
+									"message", message));
+
+					return;
+				}
+
 				String status = statusText.getText().toString();
 				postToTwitterTask = new PostToTwitterTask();
 				postToTwitterTask.execute(status);
@@ -69,6 +80,8 @@ public class StatusFragment extends Fragment {
 				}
 			}
 		});
+
+		cloud = YambaUtils.getCloud(getActivity());
 
 		return view;
 	}
