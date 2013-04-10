@@ -24,7 +24,8 @@ public class StatusActivity extends Activity {
 	private TextView textCount;
 	private int defaultTextColor;
 	private PostToTwitterTask postToTwitterTask;
-
+	private YambaClient cloud;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -66,6 +67,10 @@ public class StatusActivity extends Activity {
 				}
 			}
 		});
+		
+		// Assert we have username and password
+		cloud = YambaUtils.getCloud(this);
+		if(cloud!=null) return;
 	}
 
 	class PostToTwitterTask extends AsyncTask<String, Void, String> {
@@ -82,7 +87,6 @@ public class StatusActivity extends Activity {
 		@Override
 		protected String doInBackground(String... params) {
 			try {
-				YambaClient cloud = new YambaClient("student", "password");
 				cloud.postStatus(params[0]);
 				return "Successfully posted!";
 			} catch (YambaClientException e) {
