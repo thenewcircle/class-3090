@@ -3,7 +3,9 @@ package com.twitter.yamba;
 import java.util.List;
 
 import android.app.IntentService;
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.marakana.android.yamba.clientlib.YambaClient;
@@ -31,9 +33,24 @@ public class RefreshService extends IntentService {
 
 		// Get the timeline
 		try {
+			// Get the database
+			DbHelper dbHelper = new DbHelper(this);
+			SQLiteDatabase db = dbHelper.getWritableDatabase();
+			ContentValues values = new ContentValues();
+
+			// Get the data from the cloud
 			YambaClient cloud = YambaUtils.getCloud(this);
 			List<Status> timeline = cloud.getTimeline(20);
 			for (Status status : timeline) {
+				// ORM
+				values.clear();
+				values.put(StatusContract.Column.ID, status.getId());
+				values.put(StatusContract.Column.USER, status.getUser());
+				values.put(StatusContract.Column.MESSAGE, status.getMessage());
+				values.put(StatusContract.Column.CREATED_AT, status
+						.getCreatedAt().getTime());
+				db.insert(StatusContract.RESOURCE, null, values);
+				
 				Log.d(TAG,
 						String.format("%s: %s", status.getUser(),
 								status.getMessage()));
