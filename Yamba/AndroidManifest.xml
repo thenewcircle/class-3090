@@ -33,13 +33,16 @@
             android:name="com.twitter.yamba.SettingsActivity"
             android:label="@string/action_settings" >
         </activity>
+        <activity android:name="com.twitter.yamba.DetailsActivity" >
+        </activity>
 
         <service android:name="com.twitter.yamba.RefreshService" >
         </service>
-        
-        <provider android:name="com.twitter.yamba.StatusProvider"
+
+        <provider
+            android:name="com.twitter.yamba.StatusProvider"
             android:authorities="com.twitter.yamba.provider"
-            android:exported="false">
+            android:exported="false" >
         </provider>
     </application>
 

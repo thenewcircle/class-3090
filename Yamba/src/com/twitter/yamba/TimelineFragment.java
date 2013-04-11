@@ -3,12 +3,14 @@ package com.twitter.yamba;
 import android.app.ListFragment;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.content.CursorLoader;
+import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.SimpleCursorAdapter.ViewBinder;
 import android.widget.TextView;
@@ -16,7 +18,7 @@ import android.widget.TextView;
 public class TimelineFragment extends ListFragment {
 	private static final String[] FROM = { StatusContract.Column.USER,
 			StatusContract.Column.MESSAGE, StatusContract.Column.CREATED_AT };
-	private static final int[] TO = { R.id.text_user, R.id.test_message,
+	private static final int[] TO = { R.id.text_user, R.id.text_message,
 			R.id.text_createdAt };
 	private SimpleCursorAdapter adapter;
 
@@ -82,4 +84,18 @@ public class TimelineFragment extends ListFragment {
 			return true;
 		}
 	};
+
+	@Override
+	public void onListItemClick(ListView l, View v, int position, long id) {
+		// Create an intent to start DetailsActivity
+		Intent intent = new Intent(getActivity(), DetailsActivity.class);
+		
+		// Put extra id into that intent
+		intent.putExtra("id", id);
+		
+		startActivity(intent);
+	}
+	
+	
+	
 }
