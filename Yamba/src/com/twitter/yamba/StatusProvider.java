@@ -71,7 +71,9 @@ public class StatusProvider extends ContentProvider {
 			Log.d(TAG,
 					"inserted id: "
 							+ values.getAsLong(StatusContract.Column.ID));
-		}
+			// Notify that the data has changed
+			getContext().getContentResolver().notifyChange(uri, null);	
+		} 
 		return ContentUris.withAppendedId(uri,
 				values.getAsLong(StatusContract.Column.ID));
 	}
@@ -102,8 +104,12 @@ public class StatusProvider extends ContentProvider {
 		// update from db
 		int records = db.update(StatusContract.RESOURCE, values, where,
 				selectionArgs);
-
 		Log.d(TAG, "updated records: " + records);
+		
+		if(records>0) {
+			// Notify that the data has changed
+			getContext().getContentResolver().notifyChange(uri, null);	
+		}
 
 		return records;
 	}
@@ -133,8 +139,12 @@ public class StatusProvider extends ContentProvider {
 
 		// delete from db
 		int records = db.delete(StatusContract.RESOURCE, where, selectionArgs);
-
 		Log.d(TAG, "deleted records: " + records);
+
+		if(records>0) {
+			// Notify that the data has changed
+			getContext().getContentResolver().notifyChange(uri, null);	
+		}
 
 		return records;
 	}
@@ -166,6 +176,9 @@ public class StatusProvider extends ContentProvider {
 		// Run the query
 		Cursor cursor = queryBuilder.query(db, projection, selection,
 				selectionArgs, null, null, sortOrder);
+		// Register cursor for this uri
+		cursor.setNotificationUri(getContext().getContentResolver(), uri);
+
 		Log.d(TAG, "querying: " + queryBuilder.toString());
 		return cursor;
 	}
