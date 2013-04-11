@@ -7,8 +7,8 @@ import android.widget.SimpleCursorAdapter;
 
 public class TimelineFragment extends ListFragment {
 	private static final String[] FROM = { StatusContract.Column.USER,
-			StatusContract.Column.MESSAGE };
-	private static final int[] TO = { R.id.text_user, R.id.test_message };
+			StatusContract.Column.MESSAGE, StatusContract.Column.CREATED_AT };
+	private static final int[] TO = { R.id.text_user, R.id.test_message, R.id.text_createdAt };
 	private SimpleCursorAdapter adapter;
 
 	@Override
