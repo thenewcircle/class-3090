@@ -6,6 +6,7 @@ import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Log;
@@ -102,12 +103,12 @@ public class StatusProvider extends ContentProvider {
 		int records = db.update(StatusContract.RESOURCE, values, where,
 				selectionArgs);
 
-		Log.d(TAG, "deleted records: " + records);
+		Log.d(TAG, "updated records: " + records);
 
 		return records;
 	}
 
-	// DELETE from statuses WHERE _id = 47;
+	// DELETE from statuses WHERE _id = ? and message = '?';
 	@Override
 	public int delete(Uri uri, String selection, String[] selectionArgs) {
 		String where;
@@ -138,10 +139,34 @@ public class StatusProvider extends ContentProvider {
 		return records;
 	}
 
+	// SELECT * FROM statuses WHERE _id=47 AND user='bob' ORDER BY 'created_at';
 	@Override
 	public Cursor query(Uri uri, String[] projection, String selection,
 			String[] selectionArgs, String sortOrder) {
-		// TODO Auto-generated method stub
-		return null;
+
+		SQLiteQueryBuilder queryBuilder = new SQLiteQueryBuilder();
+		queryBuilder.setTables(StatusContract.RESOURCE);
+
+		switch (matcher.match(uri)) {
+		case StatusContract.STATUSES:
+
+			break;
+		case StatusContract.STATUSES_ID:
+			long id = ContentUris.parseId(uri);
+			queryBuilder.appendWhere(String.format(" %s=%d ",
+					StatusContract.Column.ID, id));
+			break;
+		default:
+			throw new IllegalArgumentException("Unknown URI: " + uri);
+		}
+
+		// Get the DB
+		SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+		// Run the query
+		Cursor cursor = queryBuilder.query(db, projection, selection,
+				selectionArgs, null, null, sortOrder);
+		Log.d(TAG, "querying: " + queryBuilder.toString());
+		return cursor;
 	}
 }

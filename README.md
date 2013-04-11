@@ -15,3 +15,5 @@ Parking Lot
 * MediaStore
 * Sensors
 * IPC
+* WebView
+* Gestures
