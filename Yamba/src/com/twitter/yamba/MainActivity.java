@@ -35,6 +35,9 @@ public class MainActivity extends Activity {
 		case R.id.action_refresh:
 			startService(new Intent(this, RefreshService.class));
 			return true;
+		case R.id.action_purge:
+			getContentResolver().delete(StatusContract.CONTENT_URI, null, null);
+			return true;
 		default:
 			return false;
 		}

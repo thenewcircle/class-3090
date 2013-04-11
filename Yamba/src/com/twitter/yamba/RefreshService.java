@@ -5,7 +5,6 @@ import java.util.List;
 import android.app.IntentService;
 import android.content.ContentValues;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.marakana.android.yamba.clientlib.YambaClient;
@@ -33,9 +32,6 @@ public class RefreshService extends IntentService {
 
 		// Get the timeline
 		try {
-			// Get the database
-			DbHelper dbHelper = new DbHelper(this);
-			SQLiteDatabase db = dbHelper.getWritableDatabase();
 			ContentValues values = new ContentValues();
 
 			// Get the data from the cloud
@@ -49,8 +45,8 @@ public class RefreshService extends IntentService {
 				values.put(StatusContract.Column.MESSAGE, status.getMessage());
 				values.put(StatusContract.Column.CREATED_AT, status
 						.getCreatedAt().getTime());
-				db.insert(StatusContract.RESOURCE, null, values);
-				
+				getContentResolver().insert(StatusContract.CONTENT_URI, values);
+
 				Log.d(TAG,
 						String.format("%s: %s", status.getUser(),
 								status.getMessage()));
