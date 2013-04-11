@@ -1,40 +1,31 @@
 package com.twitter.yamba;
 
-import android.app.Fragment;
+import android.app.ListFragment;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.SimpleCursorAdapter;
 
-public class TimelineFragment extends Fragment {
+public class TimelineFragment extends ListFragment {
+	private static final String[] FROM = { StatusContract.Column.USER,
+			StatusContract.Column.MESSAGE };
+	private static final int[] TO = { R.id.text_user, R.id.test_message };
+	private SimpleCursorAdapter adapter;
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-
-		View view = inflater.inflate(R.layout.fragment_timeline, null);
-		TextView textOutput = (TextView) view.findViewById(R.id.text_output);
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
 
 		// Get the data: select * from statuses;
 		Cursor cursor = getActivity().getContentResolver().query(
 				StatusContract.CONTENT_URI, null, null, null,
 				StatusContract.SORT_BY);
 
-		// Print it out
-		final int USER_INDEX = cursor
-				.getColumnIndex(StatusContract.Column.USER);
-		final int MESSAGE_INDEX = cursor
-				.getColumnIndex(StatusContract.Column.MESSAGE);
-		while (cursor.moveToNext()) {
-			String status = String.format("%s: %s",
-					cursor.getString(USER_INDEX),
-					cursor.getString(MESSAGE_INDEX));
-			textOutput.append("\n"+status);
-		}
-
-		return view;
+		// Create the adapter
+		adapter = new SimpleCursorAdapter(getActivity(),
+				R.layout.row, cursor, FROM, TO, 0);
+		
+		// Connect adapter to list
+		setListAdapter(adapter);
 	}
 
 }
