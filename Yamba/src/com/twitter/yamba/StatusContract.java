@@ -15,6 +15,7 @@ public final class StatusContract {
 		public static final String USER = "yamba_user";
 		public static final String MESSAGE = "yamba_message";
 	}
+	public static final String SORT_BY = Column.CREATED_AT+" DESC";
 
 	// DB constants
 	public static final String DB_NAME = "timeline.db";
