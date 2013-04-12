@@ -10,6 +10,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
         android:name="com.twitter.yamba.YambaApp"
@@ -47,16 +48,18 @@
         </provider>
 
         <receiver android:name="com.twitter.yamba.BootReceiver" >
-            <intent-filter >
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.twitter.yamba.action.STARTUP" />
             </intent-filter>
         </receiver>
         <receiver android:name="com.twitter.yamba.NotificationReceiver" >
-            <intent-filter >
-                <action android:name="com.twitter.yamba.action.NEW_STATUS"/>
+            <intent-filter>
+                <action android:name="com.twitter.yamba.action.NEW_STATUS" />
             </intent-filter>
         </receiver>
-        
     </application>
 
 </manifest>

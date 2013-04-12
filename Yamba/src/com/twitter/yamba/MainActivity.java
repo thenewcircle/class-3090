@@ -1,6 +1,7 @@
 package com.twitter.yamba;
 
 import android.app.Activity;
+import android.app.NotificationManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -12,6 +13,14 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		// Cancel any notifications
+		NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+		notificationManager.cancel(NotificationReceiver.NOTIFICATION_ID);
 	}
 
 	// Called only once to lazily initialize the action bar
