@@ -10,6 +10,7 @@ Parking Lot
 * NDK
 * OAuth
 * Location
+* Vibrate
 * SMS
 * Camera
 * MediaStore

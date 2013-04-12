@@ -5,6 +5,7 @@ import java.util.List;
 import android.app.IntentService;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.net.Uri;
 import android.util.Log;
 
 import com.marakana.android.yamba.clientlib.YambaClient;
@@ -31,6 +32,7 @@ public class RefreshService extends IntentService {
 		Log.d(TAG, "onStarted");
 
 		// Get the timeline
+		int newStatusCount = 0;
 		try {
 			ContentValues values = new ContentValues();
 
@@ -45,15 +47,27 @@ public class RefreshService extends IntentService {
 				values.put(StatusContract.Column.MESSAGE, status.getMessage());
 				values.put(StatusContract.Column.CREATED_AT, status
 						.getCreatedAt().getTime());
-				getContentResolver().insert(StatusContract.CONTENT_URI, values);
-
-				Log.d(TAG,
-						String.format("%s: %s", status.getUser(),
-								status.getMessage()));
+				Uri ret = getContentResolver().insert(
+						StatusContract.CONTENT_URI, values);
+				// Do we have a new status?
+				if (ret != null) {
+					newStatusCount++;
+					Log.d(TAG,
+							String.format("%s: %s", status.getUser(),
+									status.getMessage()));
+//					sendBroadcast(new Intent(StatusContract.NEW_STATUS_ACTION)
+//							.putExtra("newStatusUri", ret));
+				}
 			}
 		} catch (YambaClientException e) {
 			Log.e(TAG, "Failed to get the timeline", e);
 			e.printStackTrace();
+		}
+
+		// Send a broacast about new tweets
+		if (newStatusCount > 0) {
+			sendBroadcast(new Intent(StatusContract.NEW_STATUS_ACTION)
+					.putExtra("newStatusCount", newStatusCount));
 		}
 	}
 

@@ -67,15 +67,21 @@ public class StatusProvider extends ContentProvider {
 
 		long id = db.insertWithOnConflict(StatusContract.RESOURCE, null,
 				values, SQLiteDatabase.CONFLICT_IGNORE);
+		
 		if (id != -1) {
+			// Insert successful
 			Log.d(TAG,
 					"inserted id: "
 							+ values.getAsLong(StatusContract.Column.ID));
 			// Notify that the data has changed
-			getContext().getContentResolver().notifyChange(uri, null);	
-		} 
-		return ContentUris.withAppendedId(uri,
-				values.getAsLong(StatusContract.Column.ID));
+			getContext().getContentResolver().notifyChange(uri, null);
+
+			return ContentUris.withAppendedId(uri,
+					values.getAsLong(StatusContract.Column.ID));
+		} else {
+			// Insert failed
+			return null;
+		}
 	}
 
 	@Override
@@ -105,10 +111,10 @@ public class StatusProvider extends ContentProvider {
 		int records = db.update(StatusContract.RESOURCE, values, where,
 				selectionArgs);
 		Log.d(TAG, "updated records: " + records);
-		
-		if(records>0) {
+
+		if (records > 0) {
 			// Notify that the data has changed
-			getContext().getContentResolver().notifyChange(uri, null);	
+			getContext().getContentResolver().notifyChange(uri, null);
 		}
 
 		return records;
@@ -141,9 +147,9 @@ public class StatusProvider extends ContentProvider {
 		int records = db.delete(StatusContract.RESOURCE, where, selectionArgs);
 		Log.d(TAG, "deleted records: " + records);
 
-		if(records>0) {
+		if (records > 0) {
 			// Notify that the data has changed
-			getContext().getContentResolver().notifyChange(uri, null);	
+			getContext().getContentResolver().notifyChange(uri, null);
 		}
 
 		return records;
