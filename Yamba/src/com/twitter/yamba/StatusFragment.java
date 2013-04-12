@@ -1,8 +1,11 @@
 package com.twitter.yamba;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -22,6 +25,7 @@ import com.marakana.android.yamba.clientlib.YambaClient;
 import com.marakana.android.yamba.clientlib.YambaClientException;
 
 public class StatusFragment extends Fragment {
+	public static final String TAG = "StatusFragment";
 	private EditText statusText;
 	private Button updateButton;
 	private TextView textCount;
@@ -42,9 +46,10 @@ public class StatusFragment extends Fragment {
 
 				if (cloud == null) {
 					String message = "Please set your username&password";
-					startActivity(new Intent(getActivity(), SettingsActivity.class)
-							.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK).putExtra(
-									"message", message));
+					startActivity(new Intent(getActivity(),
+							SettingsActivity.class).addFlags(
+							Intent.FLAG_ACTIVITY_NEW_TASK).putExtra("message",
+							message));
 
 					return;
 				}
@@ -99,8 +104,22 @@ public class StatusFragment extends Fragment {
 		// Executed on a separate thread
 		@Override
 		protected String doInBackground(String... params) {
+			// Get location
+			LocationManager locationManager = (LocationManager) getActivity()
+					.getSystemService(Context.LOCATION_SERVICE);
+			Location location = locationManager
+					.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+			Log.d(TAG, "location: "+location);
+			
+			// Post to cloud
 			try {
-				cloud.postStatus(params[0]);
+				if (location != null) {
+					cloud.postStatus(params[0], location.getLatitude(),
+							location.getLongitude());
+				} else {
+					cloud.postStatus(params[0]);
+				}
+
 				return "Successfully posted!";
 			} catch (YambaClientException e) {
 				Log.e("Yamba", "onClick", e);
