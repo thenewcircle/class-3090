@@ -52,8 +52,8 @@ public class TimelineFragment extends ListFragment {
 			CursorLoader loader = new CursorLoader(getActivity(),
 					StatusContract.CONTENT_URI, null, null, null,
 					StatusContract.SORT_BY);
-			
-			Log.d("Yamba", "onCreateLoader: "+loader);
+
+			Log.d("Yamba", "onCreateLoader: " + loader);
 			return loader;
 		}
 
@@ -87,15 +87,22 @@ public class TimelineFragment extends ListFragment {
 
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
-		// Create an intent to start DetailsActivity
-		Intent intent = new Intent(getActivity(), DetailsActivity.class);
-		
-		// Put extra id into that intent
-		intent.putExtra("id", id);
-		
-		startActivity(intent);
+
+		// Find the fragment from the fragment manager
+		DetailsFragment detailsFragment = (DetailsFragment) getFragmentManager()
+				.findFragmentById(R.id.fragment_details);
+
+		if (detailsFragment != null && detailsFragment.isVisible()) {
+			detailsFragment.updateDetails(id);
+		} else {
+			// Create an intent to start DetailsActivity
+			Intent intent = new Intent(getActivity(), DetailsActivity.class);
+
+			// Put extra id into that intent
+			intent.putExtra("id", id);
+
+			startActivity(intent);
+		}
 	}
-	
-	
-	
+
 }

@@ -25,6 +25,8 @@ public class DetailsFragment extends Fragment {
 		textMessage = (TextView) view.findViewById(R.id.text_message);
 		textCreatedAt = (TextView) view.findViewById(R.id.text_createdAt);
 
+		updateDetails(-1);
+		
 		return view;
 	}
 
@@ -34,15 +36,26 @@ public class DetailsFragment extends Fragment {
 		Intent intent = getActivity().getIntent();
 		long id = intent.getLongExtra("id", -1);
 
-		if (id == -1)
+		updateDetails(id);
+		
+		Log.d("Details", "onResume with id: " + id);
+	}
+	
+	public void updateDetails(long id) {
+		// Data not set
+		if (id == -1) {
+			textUser.setText("");
+			textMessage.setText("");
+			textCreatedAt.setText("");
 			return;
-
+		}
+		
 		// Get the data from StatusProvider
 		Uri uri = ContentUris.withAppendedId(StatusContract.CONTENT_URI, id);
 		Cursor cursor = getActivity().getContentResolver().query(uri, null,
 				null, null, null);
 		if( !cursor.moveToFirst() ) return;
-
+		
 		// Update the views
 		textUser.setText(cursor.getString(cursor
 				.getColumnIndex(StatusContract.Column.USER)));
@@ -51,7 +64,5 @@ public class DetailsFragment extends Fragment {
 		textCreatedAt.setText(DateUtils.getRelativeTimeSpanString(
 				getActivity(), cursor.getLong(cursor
 						.getColumnIndex(StatusContract.Column.CREATED_AT))));
-
-		Log.d("Details", "onResume with id: " + id);
 	}
 }
