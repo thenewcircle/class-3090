@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -105,12 +106,12 @@ public class StatusFragment extends Fragment {
 		@Override
 		protected String doInBackground(String... params) {
 			// Get location
-			LocationManager locationManager = (LocationManager) getActivity()
-					.getSystemService(Context.LOCATION_SERVICE);
-			Location location = locationManager
-					.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-			Log.d(TAG, "location: "+location);
-			
+			if (location == null) {
+				location = locationManager
+						.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+			}
+			Log.d(TAG, "location: " + location);
+
 			// Post to cloud
 			try {
 				if (location != null) {
@@ -134,5 +135,50 @@ public class StatusFragment extends Fragment {
 			dialog.dismiss();
 			Toast.makeText(getActivity(), result, Toast.LENGTH_LONG).show();
 		}
+	}
+
+	private LocationManager locationManager;
+	private Location location;
+
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+		locationManager = (LocationManager) getActivity().getSystemService(
+				Context.LOCATION_SERVICE);
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
+				60000, 1000, locationListener);
 	};
+
+	private LocationListener locationListener = new LocationListener() {
+		@Override
+		public void onLocationChanged(Location location) {
+			StatusFragment.this.location = location;
+			Log.d(TAG, "locationListener location: " + location);
+		}
+
+		@Override
+		public void onProviderDisabled(String provider) {
+		}
+
+		@Override
+		public void onProviderEnabled(String provider) {
+		}
+
+		@Override
+		public void onStatusChanged(String provider, int status, Bundle extras) {
+		}
+	};
+
+	@Override
+	public void onPause() {
+		super.onPause();
+		locationManager.removeUpdates(locationListener);
+		location=null;
+	}
+
 }
